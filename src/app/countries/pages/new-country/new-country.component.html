@@ -1,0 +1,11 @@
+<div class="flex h-16 items-center justify-center rounded-2xl bg-chill-900">
+  <span class="items-center text-center text-xl text-chill-300"
+    >{{ 'new country' | titlecase }}
+  </span>
+</div>
+<app-country-form
+  [country]="country()"
+  [newCountry]="true"
+  (clickSubmit)="onSubmit($event)"
+  (clickBack)="backButton()">
+</app-country-form>

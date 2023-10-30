@@ -1,0 +1,121 @@
+<div
+  class="mb-3 flex h-16 items-center justify-center rounded-2xl bg-chill-900">
+  <span class="items-center text-center text-xl text-chill-300"
+    >{{ 'country list' | titlecase }}
+  </span>
+</div>
+<ng-container *ngIf="isLoading; else template">
+  <app-loading></app-loading>
+</ng-container>
+
+<ng-template #template class="pb-10">
+  <ng-container *ngIf="countries().length > 0; else noCountries">
+    <div class="flex flex-wrap items-center justify-between">
+      <button
+        [routerLink]="'/countries/new-country'"
+        class="mr-36 rounded bg-chill-300 p-2 text-chill-800 transition-all duration-300 hover:bg-chill-500 hover:text-chill-950">
+        New Country
+      </button>
+
+      <div class="mr-2 mt-2 flex items-center gap-2">
+        <span class="mr-2 text-chill-300">Sort By:</span>
+        <mat-button-toggle-group
+          appearance="legacy"
+          name="fontStyle"
+          aria-label="Font Style">
+          <mat-button-toggle
+            *ngFor="let sort of sortField"
+            (click)="updateSortField(sort)"
+            [ngClass]="{
+              'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+              'bg-chill-500': queryParams.pagination.sortField === sort
+            }"
+            >{{ sort | titlecase }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <span class="mr-2 text-chill-300">Sort Order:</span>
+        <mat-button-toggle-group
+          appearance="legacy"
+          name="fontStyle"
+          aria-label="Font Style">
+          <mat-button-toggle
+            *ngFor="let order of sortOrder"
+            (click)="updateSort(order)"
+            [ngClass]="{
+              'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+              'bg-chill-500': queryParams.pagination.sortOrder === order
+            }"
+            >{{ order | titlecase }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <div class="mr-2 mt-2">
+        <span class="mr-2 text-chill-300">Items:</span>
+        <mat-button-toggle-group
+          appearance="legacy"
+          name="fontStyle"
+          aria-label="Font Style">
+          <mat-button-toggle
+            *ngFor="let pageSizeOption of pageSizeOptions"
+            (click)="updateSize(pageSizeOption)"
+            [ngClass]="{
+              ' hover:bg-chill-500 transition-colors hover:text-chill-100 duration-300': true,
+              'bg-chill-500':
+                queryParams.pagination.collectionSize === pageSizeOption
+            }"
+            >{{ pageSizeOption }}
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="mt-5 flex justify-center">
+      <div
+        class="flex w-min items-center gap-2 rounded-xl bg-chill-900 p-2 px-3 text-chill-400">
+        <span>Pages:</span>
+        <div class="flex items-center gap-x-2">
+          <button
+            [ngClass]="{
+              'hover:text-chill-100 hover:scale-[2.5]  hover:rounded transition-all duration-100': true,
+              'text-chill-100': page === paginationInfo.pageNumber
+            }"
+            (click)="updatePage(page)"
+            *ngFor="
+              let page of generatePageNumbers(paginationInfo.totalPages!)
+            ">
+            {{ page }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5 flex flex-wrap justify-center gap-2">
+      <div
+        *ngFor="let country of countries()"
+        style="flex-basis: 200px"
+        class="rounded-xl border-4 border-chill-600 p-3 text-center">
+        <div style="justify-content: center">
+          <h3 class="font-bold text-chill-100">{{ country.name }}</h3>
+          <p class="text-chill-200">Code: {{ country.code }}</p>
+          <p>Id: {{ country.id }}</p>
+        </div>
+        <div class="flex justify-between">
+          <button
+            class="rounded bg-chill-300 p-2 px-5 text-chill-800 transition-all duration-300 hover:bg-chill-500 hover:text-chill-950"
+            [routerLink]="['/countries/country', country.id]">
+            Edit
+          </button>
+          <button
+            (click)="deleteCountry(country)"
+            class="rounded bg-red-300 p-2 px-5 text-red-800 transition-all duration-300 hover:bg-red-500 hover:text-red-950">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noCountries>
+    <h2 class="text-center text-chill-200">No countries to display</h2>
+  </ng-template>
+</ng-template>

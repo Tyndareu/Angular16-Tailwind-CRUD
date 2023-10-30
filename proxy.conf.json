@@ -1,0 +1,7 @@
+{
+  "/api/*": {
+    "target": "https://tst-portfolio-api.internal.w2m.com",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,25 @@
+<div class="bg-chill-800 p-10 text-chill-300">
+  <h1 mat-dialog-title>¿Are you sure?</h1>
+  <div mat-dialog-content>
+    <p>
+      This process is not reversible, it is about to eliminate:
+      <span class="text-chill-100"> {{ data }}</span>
+    </p>
+  </div>
+  <div mat-dialog-actions class="flex flex-wrap justify-around">
+    <button
+      class="rounded bg-red-300 p-2 text-red-900 transition-colors duration-300 hover:bg-red-500 hover:text-chill-950"
+      mat-button
+      (click)="onNoClick()">
+      No Thanks
+    </button>
+    <span class="spacer"></span>
+    <button
+      class="rounded bg-chill-300 p-2 px-8 text-chill-900 transition-colors duration-300 hover:bg-chill-500"
+      mat-button
+      (click)="onConfirm()"
+      cdkFocusInitial>
+      Ok
+    </button>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  max-width: 1440px;
+  margin: auto;
+}
+body {
+  width: 95%;
+  margin: auto;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: #325158;
+  color: #438e96;
+}
