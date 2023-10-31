@@ -1,0 +1,23 @@
+<div class="mt-5 flex flex-wrap justify-center gap-2">
+  <div
+    *ngFor="let country of countries"
+    class="w-[220px] rounded-xl border-4 border-chill-600 p-3 text-center max-sm:w-[48%]">
+    <div style="justify-content: center">
+      <h3 class="font-bold text-chill-100">{{ country.name }}</h3>
+      <p class="text-chill-200">Code: {{ country.code }}</p>
+      <p class="text-chill-500">Id: {{ country.id }}</p>
+    </div>
+    <div class="flex justify-between gap-1">
+      <button
+        class="rounded bg-chill-300 p-2 px-4 text-chill-800 transition-all duration-300 hover:bg-chill-500 hover:text-chill-950 sm:px-5"
+        [routerLink]="['/countries/country', country.id]">
+        Edit
+      </button>
+      <button
+        (click)="onDeleteCountry(country)"
+        class="rounded bg-red-300 p-2 text-red-800 transition-all duration-300 hover:bg-red-500 hover:text-red-950 sm:px-5">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>

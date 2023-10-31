@@ -8,6 +8,7 @@ import { MaterialModule } from '../material/material/material.module';
 import { CountriesListComponent } from './pages/countries-list/countries-list.component';
 import { CountryByIdComponent } from './pages/country-by-id/country-by-id.component';
 import { CountryFormComponent } from './components/country-form/country-form.component';
+import { CountryListComponent } from './components/country-list/country-list.component';
 import { NewCountryComponent } from './pages/new-country/new-country.component';
 import { SharedModule } from '../shared/shared.module';
 
@@ -16,6 +17,7 @@ import { SharedModule } from '../shared/shared.module';
     CountriesListComponent,
     CountryByIdComponent,
     CountryFormComponent,
+    CountryListComponent,
     NewCountryComponent,
   ],
   imports: [

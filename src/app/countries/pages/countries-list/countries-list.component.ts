@@ -21,8 +21,8 @@ export class CountriesListComponent implements OnInit {
   countries = signal<Country[]>([]);
   isLoading = false;
   pageSizeOptions = [12, 24, 36, 48];
-  sortOrder: [SortOrder, SortOrder] = ['asc', 'desc'];
-  sortField: [SortField, SortField] = ['name', 'id'];
+  sortOrder: SortOrder[] = ['asc', 'desc'];
+  sortField: SortField[] = ['name', 'id'];
 
   paginationInfo: PaginationInfo = {
     totalPages: null,

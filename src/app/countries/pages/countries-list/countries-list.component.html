@@ -17,38 +17,42 @@
         New Country
       </button>
 
-      <div class="mr-2 mt-2 flex items-center gap-2">
-        <span class="mr-2 text-chill-300">Sort By:</span>
-        <mat-button-toggle-group
-          appearance="legacy"
-          name="fontStyle"
-          aria-label="Font Style">
-          <mat-button-toggle
-            *ngFor="let sort of sortField"
-            (click)="updateSortField(sort)"
-            [ngClass]="{
-              'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
-              'bg-chill-500': queryParams.pagination.sortField === sort
-            }"
-            >{{ sort | titlecase }}
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+      <div class="mr-2 mt-2 flex flex-wrap items-center gap-2">
+        <div>
+          <span class="mr-2 text-chill-300">Sort By:</span>
+          <mat-button-toggle-group
+            appearance="legacy"
+            name="fontStyle"
+            aria-label="Font Style">
+            <mat-button-toggle
+              *ngFor="let sort of sortField"
+              (click)="updateSortField(sort)"
+              [ngClass]="{
+                'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+                'bg-chill-500': queryParams.pagination.sortField === sort
+              }"
+              >{{ sort | titlecase }}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
 
-        <span class="mr-2 text-chill-300">Sort Order:</span>
-        <mat-button-toggle-group
-          appearance="legacy"
-          name="fontStyle"
-          aria-label="Font Style">
-          <mat-button-toggle
-            *ngFor="let order of sortOrder"
-            (click)="updateSort(order)"
-            [ngClass]="{
-              'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
-              'bg-chill-500': queryParams.pagination.sortOrder === order
-            }"
-            >{{ order | titlecase }}
-          </mat-button-toggle>
-        </mat-button-toggle-group>
+        <div>
+          <span class="mr-2 text-chill-300">Sort Order:</span>
+          <mat-button-toggle-group
+            appearance="legacy"
+            name="fontStyle"
+            aria-label="Font Style">
+            <mat-button-toggle
+              *ngFor="let order of sortOrder"
+              (click)="updateSort(order)"
+              [ngClass]="{
+                'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+                'bg-chill-500': queryParams.pagination.sortOrder === order
+              }"
+              >{{ order | titlecase }}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
       </div>
 
       <div class="mr-2 mt-2">
@@ -89,30 +93,9 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 flex flex-wrap justify-center gap-2">
-      <div
-        *ngFor="let country of countries()"
-        style="flex-basis: 200px"
-        class="rounded-xl border-4 border-chill-600 p-3 text-center">
-        <div style="justify-content: center">
-          <h3 class="font-bold text-chill-100">{{ country.name }}</h3>
-          <p class="text-chill-200">Code: {{ country.code }}</p>
-          <p class="text-chill-500">Id: {{ country.id }}</p>
-        </div>
-        <div class="flex justify-between">
-          <button
-            class="rounded bg-chill-300 p-2 px-5 text-chill-800 transition-all duration-300 hover:bg-chill-500 hover:text-chill-950"
-            [routerLink]="['/countries/country', country.id]">
-            Edit
-          </button>
-          <button
-            (click)="deleteCountry(country)"
-            class="rounded bg-red-300 p-2 px-5 text-red-800 transition-all duration-300 hover:bg-red-500 hover:text-red-950">
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
+    <app-country-list
+      [countries]="countries()"
+      (deleteCountry)="deleteCountry($event)" />
   </ng-container>
 
   <ng-template #noCountries>

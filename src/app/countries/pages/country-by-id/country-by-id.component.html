@@ -11,7 +11,6 @@
   <app-country-form
     [country]="country()"
     (clickSubmit)="onSubmit($event)"
-    (clickBack)="backButton()">
-  </app-country-form>
+    (clickBack)="backButton()" />
   <h2 *ngIf="!country">Id Country not found</h2>
 </ng-template>

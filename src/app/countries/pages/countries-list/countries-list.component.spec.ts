@@ -50,11 +50,6 @@ const queryParams: QueryParams = {
   },
 };
 
-// const mockCountry: Country = {
-//   id: 1,
-//   code: 'US',
-//   name: 'United States',
-// };
 describe('CountriesListComponent', () => {
   let component: CountriesListComponent;
   let fixture: ComponentFixture<CountriesListComponent>;
