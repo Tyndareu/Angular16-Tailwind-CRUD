@@ -9,13 +9,13 @@
     </div>
     <div class="flex justify-between gap-1">
       <button
-        class="rounded bg-chill-300 p-2 px-4 text-chill-800 transition-all duration-300 hover:bg-chill-500 hover:text-chill-950 sm:px-5"
+        class="rounded bg-chill-300 p-2 px-4 text-chill-800 transition-all duration-300 hover:bg-chill-400 hover:text-chill-950 sm:px-5"
         [routerLink]="['/countries/country', country.id]">
         Edit
       </button>
       <button
         (click)="onDeleteCountry(country)"
-        class="rounded bg-red-300 p-2 text-red-800 transition-all duration-300 hover:bg-red-500 hover:text-red-950 sm:px-5">
+        class="rounded bg-red-300 p-2 text-red-800 transition-all duration-300 hover:bg-red-400 hover:text-red-950 sm:px-5">
         Delete
       </button>
     </div>

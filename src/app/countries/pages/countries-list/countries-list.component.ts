@@ -79,6 +79,7 @@ export class CountriesListComponent implements OnInit {
   }
 
   generatePageNumbers(totalPages: number) {
+    if (totalPages < 0) return [0];
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
