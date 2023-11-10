@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Country } from '../../interfaces/country';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-country-form',
@@ -10,25 +10,29 @@ export class CountryFormComponent implements OnInit {
   @Input() country: Country | null = null;
   @Input() newCountry = false;
   @Output() clickSubmit: EventEmitter<Country> = new EventEmitter();
-  @Output() clickBack = new EventEmitter();
+  @Output() clickBack: EventEmitter<void> = new EventEmitter();
 
-  public countryForm: FormGroup = this.fb.group({
-    id: [0],
-    name: ['', Validators.required],
-    code: [
-      '',
-      [
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(/^[A-Z]{2}$/),
+  public countryForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.countryForm = this.fb.group({
+      id: [0],
+      name: ['', Validators.required],
+      code: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.pattern(/^[A-Z]{2}$/),
+        ],
       ],
-    ],
-  });
+    });
+  }
 
-  constructor(private fb: FormBuilder) {}
   ngOnInit(): void {
-    if (!this.country)
-      throw Error('Country is required to create a form component');
+    if (!this.country) {
+      throw new Error('Country is required to create a form component');
+    }
     this.countryForm.patchValue(this.country);
   }
 
@@ -37,17 +41,15 @@ export class CountryFormComponent implements OnInit {
       this.countryForm.markAllAsTouched();
       return;
     }
-    //this.countryForm.reset();
     this.clickSubmit.emit(this.countryForm.value);
   }
 
   onBackClick() {
     this.clickBack.emit();
   }
-  isValidField(field: string) {
-    return (
-      this.countryForm.controls[field].errors &&
-      this.countryForm.controls[field].touched
-    );
+
+  isValidField(field: string): boolean {
+    const formControl = this.countryForm.get(field);
+    return formControl !== null && formControl.invalid && formControl.touched;
   }
 }
