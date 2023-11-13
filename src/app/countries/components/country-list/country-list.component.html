@@ -1,6 +1,6 @@
 <div class="mt-5 flex flex-wrap justify-center gap-2">
+  @for(country of countries; track country){
   <div
-    *ngFor="let country of countries"
     class="w-[220px] rounded-xl border-4 border-chill-600 p-3 text-center max-sm:w-[48%]">
     <div style="justify-content: center">
       <h3 class="font-bold text-chill-100">{{ country.name }}</h3>
@@ -20,4 +20,5 @@
       </button>
     </div>
   </div>
+  }
 </div>

@@ -1,9 +1,10 @@
+@if (country) {
 <form
   (submit)="onSubmitClick()"
   [formGroup]="countryForm"
-  *ngIf="country"
   class="m-auto mt-5 w-full max-w-xs rounded-2xl border border-chill-500 p-5">
-  <div *ngIf="!newCountry" class="mb-6 md:flex md:items-center">
+  @if (!newCountry) {
+  <div class="mb-6 md:flex md:items-center">
     <div class="md:w-1/3">
       <label
         class="mb-1 block pr-4 text-chill-300 md:mb-0 md:text-right"
@@ -15,6 +16,7 @@
       <span class="text-xl text-chill-200">{{ country.id }} </span>
     </div>
   </div>
+  }
 
   <div class="mb-6 md:flex md:items-center">
     <div class="md:w-1/3">
@@ -30,7 +32,9 @@
         type="text"
         placeholder="Name"
         formControlName="name" />
-      <span *ngIf="isValidField('name')" class="text-red-400">Required</span>
+      @if (isValidField('name')) {
+      <span class="text-red-400">Required</span>
+      }
     </div>
   </div>
   <div class="mb-6 md:flex md:items-center">
@@ -47,9 +51,9 @@
         type="text"
         placeholder="Code"
         formControlName="code" />
-      <span *ngIf="isValidField('code')" class="text-red-400"
-        >Required: Format "XX"</span
-      >
+      @if (isValidField('code')) {
+      <span class="text-red-400">Required: Format "XX"</span>
+      }
     </div>
   </div>
   <div class="md:flex md:items-center">
@@ -72,3 +76,4 @@
     </div>
   </div>
 </form>
+}

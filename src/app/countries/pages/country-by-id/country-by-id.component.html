@@ -3,14 +3,11 @@
     >{{ 'edit country' | titlecase }}
   </span>
 </div>
-<ng-container *ngIf="loading; else loaded">
-  <app-loading></app-loading>
-</ng-container>
-
-<ng-template #loaded>
-  <app-country-form
-    [country]="country()"
-    (clickSubmit)="onSubmit($event)"
-    (clickBack)="backButton()" />
-  <h2 *ngIf="!country">Id Country not found</h2>
-</ng-template>
+@if (loading) { <app-loading />} @else{
+<app-country-form
+  [country]="country()"
+  (clickSubmit)="onSubmit($event)"
+  (clickBack)="backButton()" />
+@if(!country){
+<h2>Id Country not found</h2>
+} }

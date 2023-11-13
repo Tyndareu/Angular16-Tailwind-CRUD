@@ -1,223 +1,95 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient } from '@angular/common/http';
-import { CountriesService } from './countries.service';
 import {
-  Country,
-  QueryParams,
-  CountryResponse,
-} from '../interfaces/interfaces';
-import { Observable, catchError, of, throwError } from 'rxjs';
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 
-const mockCountry: Country = {
-  id: 1,
-  name: 'Spain',
-  code: 'ES',
-};
+import { CountriesService } from './countries.service';
+import { Country, CountryResponse } from '../interfaces/country';
 
-const mockBody: QueryParams = {
-  pagination: {
-    page: 0,
-    collectionSize: 1,
-    sortOrder: 'asc',
-    sortField: 'name',
-  },
-};
-
-const mockExpectedResponse: CountryResponse = {
-  content: [
-    {
-      id: 1,
-      name: 'España',
-      code: 'ES',
-    },
-    {
-      id: 2,
-      name: 'Francia',
-      code: 'FR',
-    },
-    {
-      id: 3,
-      name: 'Alemania',
-      code: 'DE',
-    },
-  ],
-  pageable: {
-    sort: {
-      sorted: true,
-      unsorted: false,
-      empty: false,
-    },
-    pageNumber: 1,
-    pageSize: 10,
-    offset: 0,
-    paged: true,
-    unpaged: false,
-  },
-  last: false,
-  totalPages: 2,
-  totalElements: 3,
-  first: true,
-  sort: {
-    sorted: true,
-    unsorted: false,
-    empty: false,
-  },
-  number: 1,
-  numberOfElements: 3,
-  size: 10,
-  empty: false,
-};
-class TestCountriesService extends CountriesService {
-  getBaseUrl() {
-    return this.baseUrl;
-  }
-}
 describe('CountriesService', () => {
-  let service: TestCountriesService;
-  //let service: CountriesService;
-  let httpClient: jasmine.SpyObj<HttpClient>;
+  let service: CountriesService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    httpClient = jasmine.createSpyObj('HttpClient', [
-      'post',
-      'get',
-      'put',
-      'delete',
-    ]);
-
     TestBed.configureTestingModule({
-      providers: [
-        TestCountriesService,
-        { provide: HttpClient, useValue: httpClient },
-      ],
-    });
-    service = TestBed.inject(TestCountriesService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should return an Observable of Country', () => {
-    httpClient.get.and.returnValue(of(mockCountry));
-
-    const response = service.getCountryById('20');
-
-    expect(response instanceof Observable).toBeTruthy();
-    expect(response.subscribe).toBeDefined();
-
-    const values = response.subscribe(country => {
-      expect(country.id).toEqual(mockCountry.id);
-      expect(country.name).toEqual(mockCountry.name);
-      expect(country.code).toEqual(mockCountry.code);
+      imports: [HttpClientTestingModule],
+      providers: [CountriesService],
     });
 
-    expect(values).toBeTruthy();
-  });
-  it('should retrieve a list of countries with valid pagination data when getCountries is called with a valid body', () => {
-    // Act
-    httpClient.post.and.returnValue(of(mockExpectedResponse));
-    const response = service.getCountries(mockBody);
-    // Assert
-    expect(response instanceof Observable).toBeTruthy();
+    service = TestBed.inject(CountriesService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should handle error response for getCountryById method', function () {
-    const countryId = '999';
-    const errorMessage = 'Error retrieving country';
-
-    httpClient.get.and.returnValue(throwError(() => new Error(errorMessage)));
-
-    service.getCountryById(countryId).pipe(
-      catchError(error => {
-        expect(error.message).toBe(errorMessage);
-        return of(error.message);
-      })
-    );
+  afterEach(() => {
+    httpMock.verify();
   });
 
-  // New
+  it('should get countries', () => {
+    const mockResponse: CountryResponse = {
+      countries: [{ id: 1, name: 'Mexico' }],
+    };
 
-  it('should return an error when getCountries fails', () => {
-    // Arrange
-    httpClient.post.and.returnValue(throwError(() => new Error('Error')));
-
-    // Act
-    service.getCountries(mockBody).subscribe({
-      error: err => {
-        expect(err).toEqual('Error');
-      },
+    service.getCountries({}).subscribe(response => {
+      expect(response).toEqual(mockResponse);
     });
 
-    // Assert
-    expect(httpClient.post).toHaveBeenCalledWith(
-      `${service.getBaseUrl()}/filter`,
-      mockBody
-    );
+    const req = httpMock.expectOne(`${service.baseUrl}/filter`);
+    expect(req.request.method).toBe('POST');
+    req.flush(mockResponse);
   });
 
-  it('should return an error when getCountryById fails', () => {
-    // Arrange
-    const countryId = '1';
-    httpClient.get.and.returnValue(throwError(() => new Error('Error')));
+  it('should get country by id', () => {
+    const mockResponse: Country = { id: 1, name: 'Mexico' };
 
-    // Act
-    service.getCountryById(countryId).subscribe({
-      error: err => {
-        expect(err).toEqual('Error');
-      },
+    service.getCountryById('1').subscribe(response => {
+      expect(response).toEqual(mockResponse);
     });
 
-    // Assert
-    expect(httpClient.get).toHaveBeenCalledWith(
-      `${service.getBaseUrl()}/${countryId}`
-    );
+    const req = httpMock.expectOne(`${service.baseUrl}/1`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
   });
 
-  it('should handle error for editCountryById', () => {
-    const updatedCountry = { ...mockCountry, name: 'New Name' };
-    const errorMessage = 'Error editing country';
+  it('should edit country', () => {
+    const country: Country = { id: 1, name: 'Mexico' };
 
-    httpClient.put.and.returnValue(throwError(() => new Error(errorMessage)));
+    service.editCountryById(country).subscribe(() => {});
 
-    service.editCountryById(updatedCountry).subscribe({
-      error: err => {
-        expect(err).toEqual('Error editing country');
-      },
-    });
+    const req = httpMock.expectOne(`${service.baseUrl}/1`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(country);
+    req.flush(null);
   });
 
-  it('should handle error for deleteCountryById', () => {
-    // Arrange
-    const countryId = 1;
-    httpClient.delete.and.returnValue(
-      throwError(() => new Error('Error deleting country'))
-    );
+  it('should delete country', () => {
+    service.deleteCountryById(1).subscribe(() => {});
 
-    // Act
-    service.deleteCountryById(countryId).subscribe({
-      error: err => {
-        expect(err).toEqual('Error deleting country');
-      },
-    });
+    const req = httpMock.expectOne(`${service.baseUrl}/1`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(null);
   });
 
-  it('should return an error when newCountry fails', () => {
-    // Arrange
+  it('should create new country', () => {
+    const newCountry = { name: 'New Country' };
 
-    httpClient.post.and.returnValue(throwError(() => new Error('Error')));
+    service.newCountry(newCountry).subscribe(() => {});
 
-    // Act
-    service.newCountry(mockCountry).subscribe({
-      error: err => {
-        expect(err).toEqual('Error');
-      },
+    const req = httpMock.expectOne(`${service.baseUrl}`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(newCountry);
+    req.flush(null);
+  });
+
+  it('should return error on failure', () => {
+    let error: Error;
+    service.getCountries({}).subscribe({
+      error: err => (error = err),
     });
 
-    // Assert
-    expect(httpClient.post).toHaveBeenCalledWith(
-      `${service.getBaseUrl()}`,
-      mockCountry
-    );
+    const req = httpMock.expectOne(`${service.baseUrl}/filter`);
+    req.flush('Error', { status: 500, statusText: 'Server Error' });
+
+    expect(error).toBeDefined();
   });
 });
