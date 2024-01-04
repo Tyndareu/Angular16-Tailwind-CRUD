@@ -3,11 +3,14 @@
     >{{ 'edit country' | titlecase }}
   </span>
 </div>
-@if (loading) { <app-loading />} @else{
-<app-country-form
-  [country]="country()"
-  (clickSubmit)="onSubmit($event)"
-  (clickBack)="backButton()" />
-@if(!country){
-<h2>Id Country not found</h2>
-} }
+@if (loading) {
+  <app-loading />
+} @else {
+  <app-country-form
+    [country]="country()"
+    (clickSubmit)="onSubmit($event)"
+    (clickBack)="backButton()" />
+  @if (!country) {
+    <h2>Id Country not found</h2>
+  }
+}

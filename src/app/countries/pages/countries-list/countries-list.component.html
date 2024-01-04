@@ -5,103 +5,105 @@
   </span>
 </div>
 @if (isLoading) {
-<app-loading />
+  <app-loading />
 } @else {
-<div class="flex flex-wrap items-center justify-between">
-  <button
-    [routerLink]="'/countries/new-country'"
-    class="mr-36 rounded bg-chill-300 p-2 text-chill-800 transition-all duration-300 hover:bg-chill-400 hover:text-chill-950">
-    New Country
-  </button>
+  <div class="flex flex-wrap items-center justify-between">
+    <button
+      [routerLink]="'/countries/new-country'"
+      class="mr-36 rounded bg-chill-300 p-2 text-chill-800 transition-all duration-300 hover:bg-chill-400 hover:text-chill-950">
+      New Country
+    </button>
 
-  <div class="mr-2 mt-2 flex flex-wrap items-center gap-2">
-    <div>
-      <span class="mr-2 text-chill-300">Sort By:</span>
+    <div class="mr-2 mt-2 flex flex-wrap items-center gap-2">
+      <div>
+        <span class="mr-2 text-chill-300">Sort By:</span>
+        <mat-button-toggle-group
+          appearance="legacy"
+          name="fontStyle"
+          aria-label="Font Style">
+          @for (sort of sortField; track sort) {
+            <mat-button-toggle
+              (click)="updateSortField(sort)"
+              [ngClass]="{
+                'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+                'bg-chill-500': queryParams.pagination.sortField === sort
+              }"
+              >{{ sort | titlecase }}
+            </mat-button-toggle>
+          }
+        </mat-button-toggle-group>
+      </div>
+
+      <div class="amarillo">amarillo</div>
+      <div class="verde">verde</div>
+
+      <div>
+        <span class="mr-2 text-chill-300">Sort Order:</span>
+        <mat-button-toggle-group
+          appearance="legacy"
+          name="fontStyle"
+          aria-label="Font Style">
+          @for (order of sortOrder; track order) {
+            <mat-button-toggle
+              (click)="updateSort(order)"
+              [ngClass]="{
+                'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
+                'bg-chill-500': queryParams.pagination.sortOrder === order
+              }"
+              >{{ order | titlecase }}
+            </mat-button-toggle>
+          }
+        </mat-button-toggle-group>
+      </div>
+    </div>
+
+    <div class="mr-2 mt-2">
+      <span class="mr-2 text-chill-300">Items:</span>
       <mat-button-toggle-group
         appearance="legacy"
         name="fontStyle"
         aria-label="Font Style">
-        @for (sort of sortField; track sort) {
-        <mat-button-toggle
-          (click)="updateSortField(sort)"
-          [ngClass]="{
-            'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
-            'bg-chill-500': queryParams.pagination.sortField === sort
-          }"
-          >{{ sort | titlecase }}
-        </mat-button-toggle>
-        }
-      </mat-button-toggle-group>
-    </div>
-
-    <div class="amarillo">amarillo</div>
-    <div class="verde">verde</div>
-
-    <div>
-      <span class="mr-2 text-chill-300">Sort Order:</span>
-      <mat-button-toggle-group
-        appearance="legacy"
-        name="fontStyle"
-        aria-label="Font Style">
-        @for(order of sortOrder; track order){
-        <mat-button-toggle
-          (click)="updateSort(order)"
-          [ngClass]="{
-            'transition-colors hover:bg-chill-500 hover:text-chill-100 duration-300': true,
-            'bg-chill-500': queryParams.pagination.sortOrder === order
-          }"
-          >{{ order | titlecase }}
-        </mat-button-toggle>
+        @for (pageSizeOption of pageSizeOptions; track pageSizeOption) {
+          <mat-button-toggle
+            (click)="updateSize(pageSizeOption)"
+            [ngClass]="{
+              ' hover:bg-chill-500 transition-colors hover:text-chill-100 duration-300': true,
+              'bg-chill-500':
+                queryParams.pagination.collectionSize === pageSizeOption
+            }"
+            >{{ pageSizeOption }}
+          </mat-button-toggle>
         }
       </mat-button-toggle-group>
     </div>
   </div>
-
-  <div class="mr-2 mt-2">
-    <span class="mr-2 text-chill-300">Items:</span>
-    <mat-button-toggle-group
-      appearance="legacy"
-      name="fontStyle"
-      aria-label="Font Style">
-      @for (pageSizeOption of pageSizeOptions; track pageSizeOption) {
-      <mat-button-toggle
-        (click)="updateSize(pageSizeOption)"
-        [ngClass]="{
-          ' hover:bg-chill-500 transition-colors hover:text-chill-100 duration-300': true,
-          'bg-chill-500':
-            queryParams.pagination.collectionSize === pageSizeOption
-        }"
-        >{{ pageSizeOption }}
-      </mat-button-toggle>
-      }
-    </mat-button-toggle-group>
-  </div>
-</div>
-<div class="mt-5 flex justify-center">
-  <div
-    class="flex items-center gap-2 rounded-xl bg-chill-900 p-2 px-3 text-chill-400">
-    <span>Pages:</span>
-    <div class="flex flex-wrap items-center gap-x-2">
-      @for ( page of generatePageNumbers(paginationInfo.totalPages!); track page
-      ) {
-      <button
-        [ngClass]="{
-          'hover:text-chill-100 hover:scale-[2.5]  hover:rounded transition-all duration-100': true,
-          'text-chill-100': page === paginationInfo.pageNumber
-        }"
-        (click)="updatePage(page)">
-        {{ page }}
-      </button>
-      } @empty {
-      <button
-        class="hover:text-chill-100 hover:scale-[2.5] hover:rounded transition-all duration-100">
-        0
-      </button>
-      }
+  <div class="mt-5 flex justify-center">
+    <div
+      class="flex items-center gap-2 rounded-xl bg-chill-900 p-2 px-3 text-chill-400">
+      <span>Pages:</span>
+      <div class="flex flex-wrap items-center gap-x-2">
+        @for (
+          page of generatePageNumbers(paginationInfo.totalPages!);
+          track page
+        ) {
+          <button
+            [ngClass]="{
+              'hover:text-chill-100 hover:scale-[2.5]  hover:rounded transition-all duration-100': true,
+              'text-chill-100': page === paginationInfo.pageNumber
+            }"
+            (click)="updatePage(page)">
+            {{ page }}
+          </button>
+        } @empty {
+          <button
+            class="hover:text-chill-100 hover:scale-[2.5] hover:rounded transition-all duration-100">
+            0
+          </button>
+        }
+      </div>
     </div>
   </div>
-</div>
-<app-country-list
-  [countries]="countries()"
-  (deleteCountry)="deleteCountry($event)" />
+  <app-country-list
+    [countries]="countries()"
+    (deleteCountry)="deleteCountry($event)" />
 }
